@@ -2,14 +2,23 @@
 let username = localStorage.getItem('whatsappUsername');
 if (!username) window.location.href = 'index.html';
 
-// Set up WebSocket connection
-const socket = new WebSocket('ws://localhost:8080');
+// WebSocket connection with error handling
+let socket;
+try {
+  socket = new WebSocket('ws://localhost:8080');
+} catch (e) {
+  alert("Failed to connect to chat server. Please make sure the server is running.");
+  console.error("WebSocket error:", e);
+}
+
 const messagesDiv = document.getElementById('messages');
 const messageInput = document.getElementById('messageInput');
 const sendButton = document.getElementById('sendButton');
 const typingIndicator = document.getElementById('typing-indicator');
 const onlineCount = document.getElementById('online-count');
 const userAvatar = document.getElementById('user-avatar');
+const clearChatButton = document.getElementById('clear-chat');
+const emojiButton = document.getElementById('emoji-button');
 
 // Set user avatar initial
 userAvatar.textContent = username.charAt(0).toUpperCase();
@@ -17,38 +26,68 @@ userAvatar.textContent = username.charAt(0).toUpperCase();
 let isTyping = false;
 let typingTimeout;
 
-// When connected to WebSocket
-socket.onopen = () => {
-  console.log('Connected to chat server');
-  addSystemMessage('You are now connected!');
-  
-  // Send username to server
-  socket.send(JSON.stringify({
-    type: 'username',
-    username: username
-  }));
-};
+// Connection handlers
+if (socket) {
+  socket.onopen = () => {
+    console.log('Connected to chat server');
+    addSystemMessage('You are now connected!');
+    
+    // Send username to server
+    socket.send(JSON.stringify({
+      type: 'username',
+      username: username
+    }));
+  };
 
-// When a message is received
-socket.onmessage = (event) => {
-  const data = JSON.parse(event.data);
-  
-  if (data.type === 'history') {
-    // Load past messages
-    data.data.forEach(msg => addMessage(msg, false));
-  } else if (data.type === 'message') {
-    // Add new message
-    addMessage(data.data, true);
-  } else if (data.type === 'typing') {
-    // Show typing indicator
-    if (data.username !== username) {
-      showTypingIndicator(data.username);
+  socket.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    
+    if (data.type === 'history') {
+      // Load past messages
+      data.data.forEach(msg => addMessage(msg, false));
+    } else if (data.type === 'message') {
+      // Add new message
+      addMessage(data.data, true);
+    } else if (data.type === 'typing') {
+      // Show typing indicator
+      if (data.username !== username) {
+        showTypingIndicator(data.username);
+      }
+    } else if (data.type === 'userList') {
+      // Update online users count
+      updateOnlineCount(data.users.length);
     }
-  } else if (data.type === 'userList') {
-    // Update online users count
-    updateOnlineCount(data.users.length);
+  };
+
+  socket.onclose = () => {
+    addSystemMessage('Connection lost. Trying to reconnect...');
+    setTimeout(() => window.location.reload(), 3000);
+  };
+
+  socket.onerror = (error) => {
+    console.error('WebSocket error:', error);
+    addSystemMessage('Connection error. Please refresh the page.');
+  };
+}
+
+// Message sending functionality
+function sendMessage() {
+  const content = messageInput.value.trim();
+  if (content && socket && socket.readyState === WebSocket.OPEN) {
+    const message = {
+      sender: username,
+      content: content,
+      timestamp: new Date().toISOString()
+    };
+    try {
+      socket.send(JSON.stringify(message));
+      messageInput.value = "";
+    } catch (e) {
+      console.error("Failed to send message:", e);
+      addSystemMessage("Failed to send message. Please try again.");
+    }
   }
-};
+}
 
 // Send message when button is clicked or Enter is pressed
 sendButton.onclick = sendMessage;
@@ -62,10 +101,12 @@ messageInput.onkeypress = (e) => {
 messageInput.addEventListener('input', () => {
   if (!isTyping) {
     isTyping = true;
-    socket.send(JSON.stringify({
-      type: 'typing',
-      username: username
-    }));
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify({
+        type: 'typing',
+        username: username
+      }));
+    }
   }
   
   clearTimeout(typingTimeout);
@@ -74,19 +115,15 @@ messageInput.addEventListener('input', () => {
   }, 2000);
 });
 
-function sendMessage() {
-  const content = messageInput.value.trim();
-  if (content && socket.readyState === WebSocket.OPEN) {
-    const message = {
-      sender: username,
-      content: content,
-      timestamp: new Date().toISOString()
-    };
-    socket.send(JSON.stringify(message));
-    messageInput.value = "";
+// Clear chat functionality
+clearChatButton.addEventListener('click', (e) => {
+  e.preventDefault();
+  if (confirm("Are you sure you want to clear all messages?")) {
+    messagesDiv.innerHTML = '<div class="message-date">TODAY</div>';
   }
-}
+});
 
+// Message display functions
 function addMessage(msg, animate) {
   const isSent = msg.sender === username;
   const messageElement = document.createElement('div');
@@ -133,9 +170,3 @@ function formatTime(timestamp) {
 function scrollToBottom() {
   messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
-
-// Handle connection closed
-socket.onclose = () => {
-  addSystemMessage('Connection lost. Trying to reconnect...');
-  setTimeout(() => window.location.reload(), 3000);
-};
