@@ -1,0 +1,10 @@
+This project is a simple, real-time group chat application built with Node.js, WebSocket, HTML, CSS, and JavaScript.
+
+✅ Users can sign in with a name, join a shared chat room, and send messages instantly.
+✅ Real-time updates: All messages appear live for everyone connected.
+✅ Typing indicators show when others are typing.
+✅ Emoji picker for fun, expressive chatting.
+✅ Clean, modern UI inspired by popular chat apps.
+✅ Clear Chat feature that deletes chat history for everyone at once.
+
+The server is built using Node.js with the ws WebSocket library to manage real-time connections, broadcast messages, and handle chat clearing in a synchronized way.
