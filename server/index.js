@@ -68,20 +68,6 @@ wss.on('connection', (ws) => {
       return;
     }
 
-    if (data.type === 'clear') {
-      messageHistory.length = 0;
-      console.log(`Chat cleared by ${username}`);
-
-      const clearMessage = JSON.stringify({ type: 'clear' });
-      [...clients.keys()].forEach(client => {
-        if (client.readyState === WebSocket.OPEN) {
-            client.send(clearMessage);
-           }
-          });
-          return;
-        }
-
-
     const fullMessage = {
       id: uuidv4(),
       sender: username,
