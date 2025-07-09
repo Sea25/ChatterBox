@@ -14,9 +14,7 @@
     <div class="main-content">
       <div class="chat-header">
         <div class="contact-info">
-          <div class="avatar" id="user-avatar">
-            <i class="fas fa-user"></i>
-          </div>
+          <div class="avatar" id="user-avatar"></div>
           <div class="contact-details">
             <div class="contact-name">Group Chat</div>
             <div class="contact-status" id="online-count">1 online</div>
@@ -35,8 +33,9 @@
       <div class="message-container" id="messages">
         <div class="message-date">TODAY</div>
         <div class="message received">
+          <div class="sender-name">System</div>
           <div class="message-content">Welcome to the chat!</div>
-          <div class="message-time" id="message-time">12:30 PM</div>
+          <div class="message-time">12:30 PM</div>
         </div>
       </div>
       
@@ -51,7 +50,7 @@
     </div>
   </div>
 
-  <!-- Emoji Picker (hidden by default) -->
+  <!-- Emoji Picker -->
   <div id="emoji-picker" class="emoji-picker"></div>
 
   <script src="script.js"></script>

@@ -17,23 +17,27 @@
   font-family: 'Roboto', sans-serif;
 }
 
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   background-color: #f0f2f5;
   color: var(--text-primary);
-  height: 100vh;
-  overflow: hidden;
 }
 
 .app-container {
   display: flex;
   height: 100vh;
+  flex-direction: column;
 }
 
 /* Main Content Styles */
 .main-content {
-  flex: 1;
   display: flex;
   flex-direction: column;
+  height: 100%;
   background-color: var(--chat-bg);
   background-image: url('https://web.whatsapp.com/img/bg-chat-tile-light_a4be512e7195b6b733d9110b408f075d.png');
   background-repeat: repeat;
@@ -46,6 +50,9 @@ body {
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #e9edef;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .contact-info {
@@ -63,6 +70,7 @@ body {
   justify-content: center;
   color: var(--text-primary);
   font-size: 18px;
+  font-weight: bold;
 }
 
 .contact-details {
@@ -154,10 +162,10 @@ body {
 }
 
 .message {
-  max-width: 65%;
+  max-width: 80%;
   padding: 8px 12px;
   border-radius: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   position: relative;
   word-wrap: break-word;
   animation: fadeIn 0.3s ease;
@@ -175,6 +183,17 @@ body {
   border-top-right-radius: 0;
 }
 
+.sender-name {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 4px;
+  color: var(--whatsapp-green);
+}
+
+.message-content {
+  word-wrap: break-word;
+}
+
 .message-time {
   font-size: 11px;
   color: var(--message-time);
@@ -187,6 +206,9 @@ body {
 .input-container {
   padding: 8px 12px;
   background-color: #f0f2f5;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
 }
 
 .input-box {
@@ -203,6 +225,7 @@ body {
   outline: none;
   padding: 10px 12px;
   font-size: 15px;
+  min-height: 20px;
 }
 
 .emoji-button, #sendButton {
@@ -228,11 +251,13 @@ body {
 
 /* Emoji Picker Styles */
 .emoji-picker {
-  position: absolute;
+  position: fixed;
   bottom: 70px;
   right: 20px;
   width: 300px;
+  max-width: 90vw;
   height: 300px;
+  max-height: 50vh;
   background: white;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.2);
@@ -260,4 +285,24 @@ body {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 600px) {
+  .message {
+    max-width: 90%;
+  }
+  
+  .emoji-picker {
+    width: 250px;
+    right: 10px;
+  }
+  
+  .input-box {
+    padding: 5px 10px;
+  }
+  
+  .input-box input {
+    padding: 8px 10px;
+  }
 }
