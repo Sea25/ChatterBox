@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhatsApp Clone - Chat</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <div class="user-profile">
+          <div class="avatar" id="user-avatar">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="header-actions">
+            <button class="icon-button"><i class="fas fa-circle-notch"></i></button>
+            <button class="icon-button"><i class="fas fa-comment-alt"></i></button>
+            <button class="icon-button"><i class="fas fa-ellipsis-v"></i></button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="search-box">
+        <div class="search-container">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search or start new chat">
+        </div>
+      </div>
+      
+      <div class="chat-list">
+        <div class="chat-item active">
+          <div class="avatar">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="chat-info">
+            <div class="chat-name">General Chat</div>
+            <div class="last-message">Join the conversation!</div>
+          </div>
+          <div class="chat-meta">
+            <div class="time" id="last-active">Now</div>
+            <div class="unread-count">1</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Main Chat Area -->
+    <div class="main-content">
+      <div class="chat-header">
+        <div class="contact-info">
+          <div class="avatar">
+            <i class="fas fa-users"></i>
+          </div>
+          <div class="contact-details">
+            <div class="contact-name">General Chat</div>
+            <div class="contact-status" id="online-count">1 online</div>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="icon-button"><i class="fas fa-search"></i></button>
+          <button class="icon-button"><i class="fas fa-ellipsis-v"></i></button>
+        </div>
+      </div>
+      
+      <div class="message-container" id="messages">
+        <div class="message-date">TODAY</div>
+        <div class="message received">
+          <div class="message-content">Welcome to the group!</div>
+          <div class="message-time">12:30 PM</div>
+        </div>
+      </div>
+      
+      <div class="input-container">
+        <div class="typing-indicator" id="typing-indicator"></div>
+        <div class="input-box">
+          <button class="emoji-button"><i class="far fa-smile"></i></button>
+          <input type="text" id="messageInput" placeholder="Type a message">
+          <div class="input-actions">
+            <button class="attach-button"><i class="fas fa-paperclip"></i></button>
+            <button id="sendButton"><i class="fas fa-paper-plane"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
